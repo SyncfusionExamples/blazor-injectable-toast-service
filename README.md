@@ -37,6 +37,9 @@ cd ToastSample
 # Restore NuGet packages
 dotnet restore
 
+# Build the application
+dotnet build
+
 # Run the application
 dotnet run
 ```
