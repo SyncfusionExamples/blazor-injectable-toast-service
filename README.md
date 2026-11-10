@@ -31,7 +31,7 @@ This sample is a single Blazor Web App project. No separate backend or client co
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ToastSample.git
+git clone https://github.com/SyncfusionExamples/blazor-injectable-toast-service.git
 cd ToastSample
 
 # Restore NuGet packages
