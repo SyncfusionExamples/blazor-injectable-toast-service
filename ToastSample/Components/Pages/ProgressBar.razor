@@ -1,0 +1,69 @@
+﻿@page "/progressbar"
+@rendermode InteractiveServer
+@inject ToastService ToastService
+
+<PageTitle>Progress Bar</PageTitle>
+
+<h1>Progress Bar</h1>
+
+<h4 class="mt-4">Indeterminate (use instead of a loading GIF)</h4>
+<div class="row align-items-center">
+    <div class="col-md-8">
+        <SfProgressBar Type="ProgressType.Linear" IsIndeterminate="true" Value="20"
+                       Height="20" Width="100%" TrackThickness="8" ProgressThickness="8" CornerRadius="CornerType.Round" Theme="Theme.Bootstrap5">
+            <ProgressBarAnimation Enable="true" Duration="2000" Delay="0"></ProgressBarAnimation>
+        </SfProgressBar>
+    </div>
+    <div class="col-md-4 text-center">
+        <SfProgressBar Type="ProgressType.Circular" IsIndeterminate="true" Value="20"
+                       Width="100px" Height="100px" TrackThickness="6" ProgressThickness="6" Theme="Theme.Bootstrap5">
+            <ProgressBarAnimation Enable="true" Duration="2000" Delay="0"></ProgressBarAnimation>
+        </SfProgressBar>
+    </div>
+</div>
+
+<h4 class="mt-4">Real-world: show a loader while work runs</h4>
+<SfButton CssClass="e-primary" Disabled="@IsBusy" OnClick="SaveAsync">Save (simulated 3 s)</SfButton>
+@if (IsBusy)
+{
+    <div class="mt-2">
+        <SfProgressBar Type="ProgressType.Linear" IsIndeterminate="true" Value="20"
+                       Height="10" Width="100%" TrackThickness="6" ProgressThickness="6" Theme="Theme.Bootstrap5">
+            <ProgressBarAnimation Enable="true" Duration="1500"></ProgressBarAnimation>
+        </SfProgressBar>
+    </div>
+}
+
+<h4 class="mt-4">Determinate (known progress)</h4>
+<SfButton Disabled="@IsUploading" OnClick="UploadAsync">Start upload</SfButton>
+<SfProgressBar Type="ProgressType.Linear" Value="@UploadValue" Minimum="0" Maximum="100"
+               Height="30" Width="100%" TrackThickness="12" ProgressThickness="12" ShowProgressValue="true" Theme="Theme.Bootstrap5">
+    <ProgressBarAnimation Enable="true" Duration="300"></ProgressBarAnimation>
+</SfProgressBar>
+
+@code {
+    private bool IsBusy;
+    private bool IsUploading;
+    private double UploadValue;
+
+    private async Task SaveAsync()
+    {
+        IsBusy = true;
+        await Task.Delay(3000);   // replace with your real work
+        IsBusy = false;
+        ToastService.ShowSuccess("Record saved.");
+    }
+
+    private async Task UploadAsync()
+    {
+        IsUploading = true;
+        for (UploadValue = 0; UploadValue < 100; UploadValue += 10)
+        {
+            StateHasChanged();
+            await Task.Delay(300);
+        }
+        UploadValue = 100;
+        IsUploading = false;
+        ToastService.ShowSuccess("Upload complete.");
+    }
+}
