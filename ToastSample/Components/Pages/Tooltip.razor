@@ -1,0 +1,55 @@
+﻿@page "/tooltip"
+@rendermode InteractiveServer
+
+<PageTitle>Tooltip</PageTitle>
+
+<h1>Tooltip</h1>
+
+<h4 class="mt-4">Basic</h4>
+<SfTooltip Target="#btn" Content="@Content">
+    <SfButton ID="btn" Content="Show Tooltip"></SfButton>
+</SfTooltip>
+
+<h4 class="mt-4">Positions</h4>
+<div class="d-flex flex-wrap gap-2">
+    @foreach (var position in Positions)
+    {
+        <SfTooltip Position="@position" Content="@($"Position: {position}")">
+            <SfButton>@position</SfButton>
+        </SfTooltip>
+    }
+</div>
+
+<h4 class="mt-4">Plain HTML elements (labels, icons, links)</h4>
+<div class="d-flex gap-4 align-items-center">
+    @foreach (var tip in HtmlTips)
+    {
+        <SfTooltip Content="@tip.Text">
+            <span class="badge bg-primary" tabindex="0">@tip.Label</span>
+        </SfTooltip>
+    }
+</div>
+
+<h4 class="mt-4">Rich content &amp; click to open</h4>
+<SfTooltip OpensOn="Click" Width="250px">
+    <ContentTemplate>
+        <strong>Open Mic Night</strong>
+        <div>Friday, 7:00 PM</div>
+        <div>Sign-up closes at 6:30 PM.</div>
+    </ContentTemplate>
+    <ChildContent>
+        <SfButton CssClass="e-outline e-primary">Click me</SfButton>
+    </ChildContent>
+</SfTooltip>
+
+@code {
+    private string Content = "Lets go green & Save Earth !!";
+    private readonly Position[] Positions = { Position.TopCenter, Position.RightCenter, Position.BottomCenter, Position.LeftCenter };
+    private readonly (string Label, string Text)[] HtmlTips =
+    {
+        ("Username", "Username used to sign in."),
+        ("Password", "At least 8 characters."),
+        ("Events", "Open-mic events near you.")
+    };
+
+}

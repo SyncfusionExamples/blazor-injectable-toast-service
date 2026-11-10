@@ -1,0 +1,59 @@
+@* Single toast host. Placed ONCE in MainLayout with @rendermode="InteractiveServer".
+   It shares the same circuit (and therefore the same Scoped ToastService) with every
+   InteractiveServer page, so pages never need their own SfToast or styles. *@
+@implements IDisposable
+@inject ToastService ToastService
+
+<SfToast @ref="Toast" Timeout="5000" ShowCloseButton="true" ShowProgressBar="true" NewestOnTop="true">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+    <ToastAnimationSettings>
+        <ToastShowAnimationSettings Effect="ToastEffect.SlideRightIn"></ToastShowAnimationSettings>
+        <ToastHideAnimationSettings Effect="ToastEffect.SlideRightOut"></ToastHideAnimationSettings>
+    </ToastAnimationSettings>
+</SfToast>
+
+@code {
+    private SfToast? Toast;
+
+    protected override void OnInitialized()
+    {
+        ToastService.ShowToastTrigger += OnShowToast;
+    }
+
+    private void OnShowToast(ToastOption options)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            if (Toast is null) return;
+
+            // Each call gets its own ToastModel, so several toasts can be stacked
+            // without overwriting each other's title/content.
+            await Toast.ShowAsync(new ToastModel
+            {
+                Title = options.Title,
+                Content = options.Content,
+                Timeout = options.Timeout,
+                CssClass = options.Type switch
+                {
+                    ToastType.Success => "e-toast-success",
+                    ToastType.Warning => "e-toast-warning",
+                    ToastType.Error => "e-toast-danger",
+                    _ => "e-toast-info"
+                },
+                Icon = options.Type switch
+                {
+                    ToastType.Success => "e-toast-success-icon e-icons",
+                    ToastType.Warning => "e-toast-warning-icon e-icons",
+                    ToastType.Error => "e-toast-error-icon e-icons",
+                    _ => "e-toast-info-icon e-icons"
+                }
+            });
+        });
+    }
+
+    public void Dispose()
+    {
+        // Prevent leaked handlers when the circuit ends.
+        ToastService.ShowToastTrigger -= OnShowToast;
+    }
+}

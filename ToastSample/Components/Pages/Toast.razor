@@ -1,0 +1,32 @@
+﻿@page "/toast"
+@rendermode InteractiveServer
+@inject ToastService ToastService
+
+<PageTitle>Toast</PageTitle>
+
+<h1>Toast service</h1>
+<p>
+    This page has no <code>SfToast</code> and no styles. It only injects <code>ToastService</code>;
+    the single <code>ToastHost</code> in <code>MainLayout</code> displays the messages.
+</p>
+
+<div class="d-flex flex-wrap gap-2">
+    <SfButton CssClass="e-success" OnClick="@(() => ToastService.ShowSuccess("Your changes were saved."))">Success</SfButton>
+    <SfButton CssClass="e-info" OnClick="@(() => ToastService.ShowInfo("A new version is available."))">Info</SfButton>
+    <SfButton CssClass="e-warning" OnClick="@(() => ToastService.ShowWarning("Your session expires in 5 minutes."))">Warning</SfButton>
+    <SfButton CssClass="e-danger" OnClick="@(() => ToastService.ShowError("Unable to reach the server."))">Error</SfButton>
+    <SfButton OnClick="ShowCustom">Custom</SfButton>
+</div>
+
+@code {
+    private void ShowCustom()
+    {
+        ToastService.ShowToast(new ToastOption
+        {
+            Title = "Toast Title",
+            Content = "Toast content",
+            Type = ToastType.Info,
+            Timeout = 2000
+        });
+    }
+}
