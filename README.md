@@ -41,7 +41,6 @@ dotnet restore
 dotnet run
 ```
 
-The app starts at **https://localhost:5001** (or another port if 5001 is in use). The exact URL is printed to the console.
 
 ### 3. Open in Browser
 
